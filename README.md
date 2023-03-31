@@ -1,3 +1,3 @@
 # Marciano
 
-Composition tools of Marc Evanstein and Mariano Sigman.
+Composition tools for the collaboration between Marc Evanstein and Mariano Sigman.
