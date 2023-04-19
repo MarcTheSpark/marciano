@@ -13,7 +13,7 @@ def _snake_to_camel(s):
 
 
 class Element:
-    
+
     def __init__(self, name_or_number):
         if isinstance(name_or_number, str):
             self.element_info = pt_dataframe.loc[name_or_number.capitalize()]
@@ -39,7 +39,9 @@ class Element:
         return True if np.isnan(self.year) else year >= self.year
         
     def __getattr__(self, attr):
-        if attr in self.element_info:        
+        if attr == "name":
+            return self.element
+        elif attr in self.element_info:
             return self.element_info[attr]
         elif (camel_version := _snake_to_camel(attr)) in self.element_info:
             return self.element_info[camel_version]
@@ -48,3 +50,19 @@ class Element:
     
     def __repr__(self):
         return f"Element({self.AtomicNumber})"
+
+
+num_elements = len(pt_dataframe)
+all_elements = [Element(i + 1) for i in range(num_elements)]
+
+
+def get_attribute_sequence(attribute_name):
+    return [getattr(element, attribute_name) for element in all_elements]
+
+
+def get_attribute_range(attribute_name):
+    attribute_sequence = get_attribute_sequence(attribute_name)
+    if any(isinstance(x, str) for x in attribute_sequence):
+        return set(attribute_sequence)
+    else:
+        return min(attribute_sequence), max(attribute_sequence)
