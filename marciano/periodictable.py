@@ -7,6 +7,12 @@ pt_dataframe = pd.read_csv(pathlib.Path(__file__).parent / "PeriodicTable.csv")
 pt_dataframe.set_index("Element", drop=False, inplace=True)
 pt_dataframe["Electronegativity"].fillna(0, inplace=True)
 
+for column in "Metal", "Nonmetal", "Metalloid", "Radioactive":
+    pt_dataframe[column].fillna(False, inplace=True)
+    pt_dataframe[column].replace("yes", True, inplace=True)
+pt_dataframe["Electronegativity"].fillna(0, inplace=True)
+pt_dataframe["Electronegativity"].fillna(0, inplace=True)
+pt_dataframe["Year"].fillna(0, inplace=True)
 
 def _snake_to_camel(s):
     return ''.join(x.title() for x in s.split("_"))
@@ -37,7 +43,13 @@ class Element:
         
     def discovered_by(self, year):
         return True if np.isnan(self.year) else year >= self.year
-        
+
+    @property
+    def metalicity(self):
+        return "Metal" if self.metal else "Metalloid" if self.metalloid else "Nonmetal"
+
+    Metalicity = metalicity
+
     def __getattr__(self, attr):
         if attr == "name":
             return self.element
