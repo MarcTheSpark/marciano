@@ -142,9 +142,7 @@ if __name__ == '__main__':
     # Generate a set of points on a spiral
     N = 2000
     arc_lengths = np.linspace(0, 100, N)
-    print("HERE")
     points = [position_on_spiral(arc_length,0.1, np.pi/4, np.pi/3) for arc_length in arc_lengths]
-    print("Here2")
     # Convert points to Cartesian coordinates for plotting
     x, y, z = zip(*[sph2cart(1, theta, phi) for theta, phi in points])
 
