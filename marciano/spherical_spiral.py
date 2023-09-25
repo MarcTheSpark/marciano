@@ -1,55 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
-
-def spherical_spiral_from_north_pole(tangential_arc_length, radial_change_per_revolution):
-    """
-    Generator function for a spiral in spherical coordinates centering on the north pole.
-
-    :param tangential_arc_length: Desired arc length to move tangentially for each step on a unit sphere.
-    :param radial_change_per_revolution: radians to move radially away from the start point for every 2 pi rotated tangentially.
-
-    :return: successive values of theta and phi.
-    """
-
-    theta, phi = tangential_arc_length * 2, 0
-    yield theta, phi  # Yield the initial position
-
-    # Provide an initial step in theta to move away from the pole
-    # theta += tangential_arc_length * 1.2
-    # yield theta, phi
-
-    while True:
-        # Compute the change in phi to achieve the desired arc length, based on current theta
-        if np.sin(theta) != 0:
-            delta_phi = tangential_arc_length / np.sin(theta)
-        else:
-            delta_phi = 0  # At poles, no movement in phi
-
-        phi += delta_phi
-        phi %= 2 * np.pi  # Handle wrapping around in phi
-
-        # Update theta based on accumulated change in phi
-        theta += (delta_phi / (2 * np.pi)) * radial_change_per_revolution
-        theta = np.clip(theta, 0, np.pi)  # Clip theta to remain in [0, pi]
-
-        yield theta, phi
-
-
-def spherical_spiral(tangential_arc_length, radial_change_per_revolution, start_theta=0, start_phi=0):
-    """
-    Generator function for a spiral in spherical coordinates centering on a given point.
-
-    :param tangential_arc_length: Desired arc length to move tangentially for each step on a unit sphere.
-    :param radial_change_per_revolution: Radians to move radially away from the start point for every 2 pi rotated tangentially.
-    :param start_theta: the starting co-latitude.
-    :param start_phi: the starting longitude.
-
-    :return: successive values of theta and phi.
-    """
-
-    for theta, phi in spherical_spiral_from_north_pole(tangential_arc_length, radial_change_per_revolution):
-        yield rotate_point(start_theta, start_phi, theta, phi)
+from scipy.interpolate import interp1d
 
 
 def rotate_point(theta_rot, phi_rot, theta, phi):
@@ -115,12 +66,85 @@ def rotation_matrix(axis, angle):
                      [2 * (b * d - a * c), 2 * (c * d + a * b), a * a + d * d - b * b - c * c]])
 
 
-if __name__ == '__main__':
-    # Generate a set of points using the spiral generator
-    N = 2000  # Number of points
-    spiral = spherical_spiral(0.02, 0.2, start_theta=np.pi/2, start_phi=np.pi/3)
-    points = list(next(spiral) for _ in range(N))
+def precompute_spiral(radial_change_per_revolution, ds=0.01):
+    """
+    Precompute a spiral's coordinates up to the point that it reaches the south pole.
 
+    Parameters:
+    - radial_change_per_revolution: The change in radial distance (theta) for each full revolution around the spiral.
+    - ds: The differential arc length for which the change in theta and phi is calculated.
+
+    Returns:
+    - A tuple of arrays: (arc_lengths, thetas, phis)
+    """
+
+    thetas, phis, arc_lengths = [0], [0], [0]
+    theta, phi, traveled_length = 0, 0, 0
+
+    while theta < np.pi:
+        # Calculate dphi based on current theta
+        dphi = ds / np.sqrt(radial_change_per_revolution ** 2 + (np.sin(theta) ** 2))
+
+        # Calculate dtheta based on radial_change_per_revolution and dphi
+        dtheta = radial_change_per_revolution * dphi / (2 * np.pi)
+
+        # Update theta and phi
+        theta += dtheta
+        phi += dphi
+
+        # Update the traveled length
+        traveled_length += ds
+
+        thetas.append(theta)
+        phis.append(phi)
+        arc_lengths.append(traveled_length)
+
+    return np.array(arc_lengths), np.array(thetas), np.array(phis)
+
+
+_precomputed_spirals = {}
+
+def position_on_spiral(arc_length, radial_change_per_revolution, start_theta=0, start_phi=0, ds=0.01):
+    """
+    Given an arc length and a radial change per revolution, compute the position on a spiral
+    centered on the North Pole in spherical coordinates. The spiral is constructed such that
+    the distance between successive points (in terms of arc length) is approximately equal.
+
+    Parameters:
+    - arc_length: The total arc length moved along the spiral.
+    - radial_change_per_revolution: The change in radial distance (theta) for each full revolution around the spiral.
+    - start_theta: theta of center of the spiral
+    - start_phi: phi of center of the spiral
+    - ds: The differential arc length for which the change in theta and phi is calculated.
+
+    Returns:
+    - The spherical coordinates (theta, phi) of the position on the spiral.
+    """
+    if (radial_change_per_revolution, ds) not in _precomputed_spirals:
+        arc_lengths, thetas, phis = precompute_spiral(radial_change_per_revolution, ds)
+        # Use linear interpolation to compute the theta and phi values
+        theta_interp = interp1d(arc_lengths, thetas, kind='linear', fill_value="extrapolate")
+        phi_interp = interp1d(arc_lengths, phis, kind='linear', fill_value="extrapolate")
+        _precomputed_spirals[(radial_change_per_revolution, ds)] = theta_interp, phi_interp
+    else:
+        theta_interp, phi_interp = _precomputed_spirals[(radial_change_per_revolution, ds)]
+
+    theta, phi = theta_interp(arc_length), phi_interp(arc_length) % (2 * np.pi)
+    theta %= 2 * np.pi
+
+    if start_phi == start_theta == 0:
+        return theta, phi
+    else:
+        return rotate_point(start_theta, start_phi, theta, phi)
+
+
+if __name__ == '__main__':
+    # Generate a set of points on a spiral
+    N = 2000
+    arc_lengths = np.linspace(0, 100, N)
+    print("HERE")
+    points = [position_on_spiral(arc_length,0.1, np.pi/4, np.pi/3) for arc_length in arc_lengths]
+    print("Here2")
     # Convert points to Cartesian coordinates for plotting
     x, y, z = zip(*[sph2cart(1, theta, phi) for theta, phi in points])
 

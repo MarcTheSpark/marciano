@@ -20,7 +20,7 @@ except FileNotFoundError:
         print("Local copy not found; tring to load remote copy.")
         microwave_map = hp.read_map('https://irsa.ipac.caltech.edu/data/Planck/release_2/all-sky-maps/maps/component-maps/cmb/COM_CMB_IQU-smica-field-Int_2048_R2.01_full.fits') # read Planck map
     print("Success. Downgrading map.")
-    downsampled_microwave_map = hp.ud_grade(microwave_map, nside_out=hp.get_nside(microwave_map) // 4)
+    downsampled_microwave_map = hp.ud_grade(microwave_map, nside_out=hp.get_nside(microwave_map) // 8)
     print("Saving downgraded map for future use.")
     hp.write_map(_current_directory / "downgraded.fits", downsampled_microwave_map)
     microwave_map = downsampled_microwave_map
@@ -75,7 +75,7 @@ def get_value_at(sharpness, theta, phi):
 
 if __name__ == '__main__':
     for sharpness in np.linspace(0, 1, 50):
-        projection = get_value_at(sharpness, np.linspace(0, np.pi, 180)[:, np.newaxis],  np.linspace(0, 2 * np.pi, 320))
+        projection = get_value_at(sharpness, np.linspace(0, np.pi, 360)[:, np.newaxis],  np.linspace(0, 2 * np.pi, 640))
         plt.imshow(projection, cmap='viridis', origin='lower')
         plt.show()
 
