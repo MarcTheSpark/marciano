@@ -73,6 +73,20 @@ def get_value_at(sharpness, theta, phi):
     return get_map_value_at(filtered_map, theta, phi)
 
 
+_sharpness_max_values = [max(abs(filtered_map)) for filtered_map in filtered_maps]
+
+
+def get_max_value_for_sharpness(sharpness):
+    sharpness = max(min(sharpness, 1), 0)
+    index = sharpness * (len(_sharpness_max_values) - 1)
+    if index == int(index):
+        return _sharpness_max_values[index]
+    else:
+        lower_index = int(index // 1)
+        float_part = index % 1
+        return _sharpness_max_values[lower_index] * (1 - float_part) + _sharpness_max_values[lower_index + 1] * float_part
+
+
 if __name__ == '__main__':
     for sharpness in np.linspace(0, 1, 50):
         projection = get_value_at(sharpness, np.linspace(0, np.pi, 360)[:, np.newaxis],  np.linspace(0, 2 * np.pi, 640))

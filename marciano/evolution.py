@@ -117,9 +117,10 @@ class Population:
         if not isinstance(self.individuals, list):
             self.individuals = list(self.individuals)
         self.individuals.sort(key=self.fitness_function)
-        self._individuals_list_lock = threading.Lock()
+        self._individuals_list_lock = threading.RLock()
         self._new_generation_in_progress = []
         self._new_generation_is_sorted = False
+        self._evolution_process = None
 
     @classmethod
     def generate(cls, individual_type, size, fitness_function,
@@ -168,20 +169,26 @@ class Population:
             self._new_generation_in_progress.clear()
             self._new_generation_is_sorted = False
 
+
+    evo_process_counter = count()
     def evolve_continuously(self, evolutions_per_minute, sex_prob=0, new_generation_action=None, clock=None):
         generation_period = 60 / evolutions_per_minute
         if new_generation_action:
             new_generation_action(self)
 
+        # increment the id of the current evolution process; all previous evolution processes will end since they
+        # no longer match the current process id
+        self._evolution_process = this_evo_process = next(Population.evo_process_counter)
+
         def _step_through_generations():
-            while True:
+            while self._evolution_process == this_evo_process:
                 if new_generation_action:
                     new_generation_action(self)
                 self.next_generation(sex_prob)
                 wait(generation_period)
 
         def _evolve_continuously():
-            while True:
+            while self._evolution_process == this_evo_process:
                 wait_time = 0.05
                 with self._individuals_list_lock:
                     if len(self._new_generation_in_progress) < len(self.individuals):
@@ -198,6 +205,9 @@ class Population:
         else:
             threading.Thread(target=_evolve_continuously, daemon=True).start()
             threading.Thread(target=_step_through_generations, daemon=True).start()
+
+    def stop_evolving(self):
+        self._evolution_process = None
 
     def get_individual(self, min_percentile=0, max_percentile=1):
         with self._individuals_list_lock:
