@@ -50,6 +50,16 @@ class Element:
 
     Metalicity = metalicity
 
+    @property
+    def period(self):
+        return int(self.element_info["Period"])
+
+    @property
+    def group(self):
+        return f"La{self.atomic_number - 56}" if 57 <= self.atomic_number <= 71 \
+            else f"Ac{self.atomic_number - 88}" if 89 <= self.atomic_number <= 103 \
+            else int(self.element_info["Group"])
+
     def __getattr__(self, attr):
         if attr == "name":
             return self.element
