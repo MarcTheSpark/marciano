@@ -86,15 +86,15 @@ AtomicNumber,Element,Symbol,AtomicMass,NumberOfNeutrons,NumberOfProtons,NumberOf
 85,Astatine,At,210,125,85,85,6,17,solid,yes,yes,,yes,,Noble Gas,1.4,2.2,9.3,7.00E+00,575.15,610,21,Corson et al.,1940,,6,7
 86,Radon,Rn,222,136,86,86,6,18,gas,yes,yes,yes,,,Alkali Metal,1.3,,10.7485,9.73E-03,202.15,211.3,20,Dorn,1900,0.094,6,8
 87,Francium,Fr,223,136,87,87,7,1,solid,yes,yes,yes,,,Alkaline Earth Metal,,0.7,4.0727,1.87E+00,300.15,950,21,Perey,1939,,7,1
-88,Radium,Ra,226,138,88,88,7,2,solid,yes,yes,yes,,,Actinide,,0.9,5.2784,5.50E+00,973.15,2010,15,Pierre and Marie Curie,1898,,7,2
-89,Actinium,Ac,227,138,89,89,7,3,solid,yes,yes,yes,,,Actinide,,1.1,5.17,1.01E+01,1323.15,3471,11,Debierne/Giesel,1899,0.12,7,
-90,Thorium,Th,232.038,142,90,90,7,,solid,yes,yes,yes,,,Actinide,,1.3,6.3067,1.17E+01,2028.15,5061,12,Berzelius,1828,0.113,7,
-91,Protactinium,Pa,231.036,140,91,91,7,,solid,yes,yes,yes,,,Actinide,,1.5,5.89,1.54E+01,1873.15,4300,14,Hahn and Meitner,1917,,7,
-92,Uranium,U,238.029,146,92,92,7,,solid,yes,yes,yes,,,Actinide,,1.38,6.1941,1.90E+01,1405.15,4404,15,Peligot,1841,0.116,7,
-93,Neptunium,Np,237,144,93,93,7,,artificial,yes,,yes,,,Actinide,,1.36,6.2657,2.05E+01,913.15,4273,153,McMillan and Abelson,1940,,7,
-94,Plutonium,Pu,244,150,94,94,7,,artificial,yes,,yes,,,Actinide,,1.28,6.0262,1.98E+01,913.15,3501,163,Seaborg et al.,1940,,7,
-95,Americium,Am,243,148,95,95,7,,artificial,yes,,yes,,,Actinide,,1.3,5.9738,1.37E+01,1267.15,2880,133,Seaborg et al.,1944,,7,
-96,Curium,Cm,247,151,96,96,7,,artificial,yes,,yes,,,Actinide,,1.3,5.9915,1.35E+01,1340.15,3383,133,Seaborg et al.,1944,,7,
+88,Radium,Ra,226,138,88,88,7,2,solid,yes,yes,yes,,,Actinide,2.8,0.9,5.2784,5.50E+00,973.15,2010,15,Pierre and Marie Curie,1898,,7,2
+89,Actinium,Ac,227,138,89,89,7,3,solid,yes,yes,yes,,,Actinide,2.5,1.1,5.17,1.01E+01,1323.15,3471,11,Debierne/Giesel,1899,0.12,7,
+90,Thorium,Th,232.038,142,90,90,7,,solid,yes,yes,yes,,,Actinide,2.3,1.3,6.3067,1.17E+01,2028.15,5061,12,Berzelius,1828,0.113,7,
+91,Protactinium,Pa,231.036,140,91,91,7,,solid,yes,yes,yes,,,Actinide,2.3,1.5,5.89,1.54E+01,1873.15,4300,14,Hahn and Meitner,1917,,7,
+92,Uranium,U,238.029,146,92,92,7,,solid,yes,yes,yes,,,Actinide,2.2,1.38,6.1941,1.90E+01,1405.15,4404,15,Peligot,1841,0.116,7,
+93,Neptunium,Np,237,144,93,93,7,,artificial,yes,,yes,,,Actinide,2.2,1.36,6.2657,2.05E+01,913.15,4273,153,McMillan and Abelson,1940,,7,
+94,Plutonium,Pu,244,150,94,94,7,,artificial,yes,,yes,,,Actinide,2.2,1.28,6.0262,1.98E+01,913.15,3501,163,Seaborg et al.,1940,,7,
+95,Americium,Am,243,148,95,95,7,,artificial,yes,,yes,,,Actinide,2.2,1.3,5.9738,1.37E+01,1267.15,2880,133,Seaborg et al.,1944,,7,
+96,Curium,Cm,247,151,96,96,7,,artificial,yes,,yes,,,Actinide,2.2,1.3,5.9915,1.35E+01,1340.15,3383,133,Seaborg et al.,1944,,7,
 97,Berkelium,Bk,247,150,97,97,7,,artificial,yes,,yes,,,Actinide,,1.3,6.1979,1.48E+01,1259.15,983,83,Seaborg et al.,1949,,7,
 98,Californium,Cf,251,153,98,98,7,,artificial,yes,,yes,,,Actinide,,1.3,6.2817,1.51E+01,1925.15,1173,123,Seaborg et al.,1950,,7,
 99,Einsteinium,Es,252,153,99,99,7,,artificial,yes,,yes,,,Actinide,,1.3,6.42,1.35E+01,1133.15,1269,123,Ghiorso et al.,1952,,7,
