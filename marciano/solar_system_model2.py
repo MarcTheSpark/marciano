@@ -93,15 +93,6 @@ class SolarSystem:
             p.positions = np.concatenate([p.positions, new_planet_positions[p][1:]])
             p.velocities = np.concatenate([p.velocities, new_planet_velocities[p][1:]])
 
-    # def calculate_up_to_inefficient(self, date_to_calculate_to, dt=1.0):
-    #     date_to_calculate_to = parse_date(date_to_calculate_to)
-    #     while self.times[-1] < date_to_calculate_to:
-    #         self.times = np.concatenate([self.times, [self.times[-1] + datetime.timedelta(days=dt)]])
-    #         for p in self.planets:
-    #             p.positions = np.concatenate([p.positions, [p.positions[-1] + p.velocities[-1] * dt]])
-    #             acc = -2.959e-4 * p.positions[-1] / np.sum(p.positions[-1] ** 2) ** (3. / 2)  # in units of AU/day^2
-    #             p.velocities = np.concatenate([p.velocities, [p.velocities[-1] + acc * dt]])
-
     @functools.lru_cache(64)
     def get_snapshot(self, snapshot_date:  str | float) -> SolarSystemSnapshot:
         if isinstance(snapshot_date, str):
@@ -151,10 +142,22 @@ class SolarSystemSnapshot:
 
     def get_angle(self, obj):
         pos = self.get_position(obj)
-        return np.math.atan2(pos[1], pos[0])
+        return np.atan2(pos[1], pos[0])
 
     def average(self, other: SolarSystemSnapshot):
         return SolarSystemSnapshot(
             [(x + y) / 2 for x, y in zip(self.planet_positions, other.planet_positions)],
             [(x + y) / 2 for x, y in zip(self.planet_velocities, other.planet_velocities)],
         )
+
+object_diameters_km = {
+    "sun": 695508,
+    "mercury": 4879,
+    "venus": 12104,
+    "earth": 12756,
+    "mars": 6792,
+    "jupiter": 142984,
+    "saturn": 120536,
+    "uranus": 51118,
+    "neptune": 49528
+}
