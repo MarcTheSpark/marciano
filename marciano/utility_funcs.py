@@ -50,3 +50,16 @@ def phase_alignment(x, y, blur_width=0):
         return 0.5
     else:
         return round((correlations[0] - min_corr) / (max_corr - min_corr), 10)
+
+
+def window_fit_score(x, window_min, window_max, half_life=0.5):
+    if window_min <= x <= window_max:
+        return 1
+    elif x < window_min:
+        return 0.5 ** ((window_min - x) / half_life)
+    else:
+        return 0.5 ** ((x - window_max) / half_life)
+
+
+def target_fit_score(x, target, half_life=0.5):
+    return window_fit_score(x, target, target, half_life)
