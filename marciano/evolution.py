@@ -169,9 +169,9 @@ class Population:
             self._new_generation_in_progress.clear()
             self._new_generation_is_sorted = False
 
-
     evo_process_counter = count()
-    def evolve_continuously(self, evolutions_per_minute, sex_prob=0, new_generation_action=None, clock=None):
+    def evolve_continuously(self, evolutions_per_minute, sex_prob=0, new_generation_action=None, clock=None,
+                            amortize=False):
         generation_period = 60 / evolutions_per_minute
         if new_generation_action:
             new_generation_action(self)
@@ -200,7 +200,8 @@ class Population:
                 time.sleep(wait_time)
 
         if clock:
-            clock.fork_unsynchronized(_evolve_continuously)
+            if amortize:
+                clock.fork_unsynchronized(_evolve_continuously)
             clock.fork(_step_through_generations)
         else:
             threading.Thread(target=_evolve_continuously, daemon=True).start()
