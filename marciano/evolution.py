@@ -220,6 +220,10 @@ class Population:
         with self._individuals_list_lock:
             return sum(self.fitness_function(individual) for individual in self.individuals) / len(self.individuals)
 
+    def mean_of_func(self, func):
+        with self._individuals_list_lock:
+            return sum(func(individual) for individual in self.individuals) / len(self.individuals)
+        
     def __repr__(self):
         return f"Population({self.individuals})"
 
